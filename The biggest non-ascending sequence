@@ -1,0 +1,65 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class GFG {
+ private
+  static int binarySearch(List<Integer> piles, int[] array, int key) {
+    int low = 0;
+    int high = piles.size() - 1;
+    while (low <= high) {
+      int mid = low + (high - low) / 2;
+      if (array[piles.get(mid)] >= key) {
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+    return low;
+  }
+
+ private
+  static List<Integer> findLNIS(int[] array) {
+    int n = array.length;
+    int[] pre = new int[n];
+    List<Integer> piles = new ArrayList<>();
+
+    for (int i = 0; i < n; i++) {
+      int pos = binarySearch(piles, array, array[i]);
+      if (pos == piles.size()) {
+        piles.add(i);
+      } else {
+        piles.set(pos, i);
+      }
+      if (pos > 0) {
+        pre[i] = piles.get(pos - 1);
+      } else {
+        pre[i] = -1;
+      }
+    }
+
+    List<Integer> result = new ArrayList<>();
+    for (int i = piles.get(piles.size() - 1); i >= 0; i = pre[i]) {
+      result.add(i);
+    }
+    return result;
+  }
+
+ public
+  static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+    int n = scanner.nextInt();
+    int[] array = new int[n];
+
+    for (int i = 0; i < n; i++) {
+      array[i] = scanner.nextInt();
+    }
+
+    List<Integer> result = findLNIS(array);
+    int size = result.size();
+    System.out.println(size);
+    for (int i = size - 1; i >= 0; i--) {
+      System.out.print(result.get(i) + 1 + " ");
+    }
+  }
+}
